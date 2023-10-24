@@ -1,18 +1,31 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from APIs import nutrislice as menu, google_cal
+from secret.config import *
+from helpers.helpers import *
 
 
-# Press the green button in the gutter to run the script.
+date = get_current_date()
+client = google_cal.GoogleCalendarClient()
+
+
+def main():
+    for name, var in KIDS.items():
+        print('Collecting menu for', var['school_name'])
+        menu_list = menu.collect_month(date, var['school_id'])
+        menu.save(menu_list, file_name=name + '_Menu.json')
+        print('Menu collection complete, sending to Google Calendar')
+        count = 0
+        for week in menu_list:
+            for day in week:
+                count += 1
+                summary = day['summary']
+                desc = day['description']
+                start_date = day['start']
+                start = start_date['date']
+                end_date = day['end']
+                end = end_date['date']
+                client.create_event(summary, desc, start, end, calendar_id=var['calendar_id'])
+        print('Sent {} meals to Google Calendar'.format(count))
+
+
 if __name__ == '__main__':
-    print_hi('Guy')
-    print()
-    print('Sup')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
