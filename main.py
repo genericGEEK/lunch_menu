@@ -11,7 +11,6 @@ def main():
     for name, var in KIDS.items():
         print('Collecting menu for', var['school_name'])
         menu_list = menu.collect_month(date, var['school_id'])
-        menu.save(menu_list, file_name=name + '_Menu.json')
         print('Menu collection complete, sending to Google Calendar')
         count = 0
         for week in menu_list:
