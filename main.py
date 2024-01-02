@@ -5,7 +5,7 @@ from helpers.helpers import *
 
 date = get_current_date()
 client = google_cal.GoogleCalendarClient()
-
+new_value = ''
 
 def main():
     for name, var in KIDS.items():
